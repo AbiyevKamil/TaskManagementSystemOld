@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using System.Web.Security;
 using TaskManagementSystem.Entity;
 using TaskManagementSystem.Models;
 
@@ -65,9 +66,12 @@ namespace TaskManagementSystem.Controllers
             return View(model);
         }
 
+        private string returnUrl;
+
         [HttpGet]
         public ActionResult Login()
         {
+            returnUrl = Request.Params["returnUrl"];
             return View();
         }
 
@@ -81,9 +85,17 @@ namespace TaskManagementSystem.Controllers
                 {
                     if (Crypto.VerifyHashedPassword(oldManagerUser.Password, model.Password))
                     {
+                        //FormsAuthentication.SetAuthCookie(oldManagerUser.Id.ToString(), model.RememberMe);
                         if (model.RememberMe)
+                        {
+                            Session.Timeout = 1440;
                             Session["AuthToken"] = oldManagerUser.Id;
-                        return RedirectToAction("Index", "Tasks");
+                        }
+
+                        if (String.IsNullOrEmpty(returnUrl))
+                            return RedirectToAction("Index", "Tasks");
+                        // Take a look here
+                        return RedirectToAction("Dashboard", "Manager");
                     }
                 }
                 var oldWorkerUser = _context.WorkerUsers.FirstOrDefault(i => i.Email == model.Email);
@@ -92,7 +104,10 @@ namespace TaskManagementSystem.Controllers
                     if (Crypto.VerifyHashedPassword(oldWorkerUser.Password, model.Password))
                     {
                         if (model.RememberMe)
+                        {
+                            Session.Timeout = 1440;
                             Session["AuthToken"] = oldWorkerUser.Id;
+                        }
                         return RedirectToAction("Index", "Home");
                     }
                 }

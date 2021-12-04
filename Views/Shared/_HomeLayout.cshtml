@@ -15,22 +15,12 @@
                 @Html.ActionLink("Task Manager", "Index", "Home", new { }, new { @class = "nav_brand" })
             </p>
             <ul class="nav_main--links">
-                @if (Session["AuthToken"] == null)
-                {
-                    <li>
-                        @Html.ActionLink("Register", "Register", "Account", new { }, new { @class = "nav_link" })
-                    </li>
-                    <li>
-                        @Html.ActionLink("Login", "Login", "Account", new { }, new { @class = "nav_link" })
-                    </li>
-                }
-                else
-                {
-                    using (Html.BeginForm("Logout", "Account"))
-                    {
-                        <input type="submit" value="Logout" class="btn-logout" />
-                    }
-                }
+                <li>
+                    @Html.ActionLink("Register", "Register", "Account", new { }, new { @class = "nav_link" })
+                </li>
+                <li>
+                    @Html.ActionLink("Login", "Login", "Account", new { }, new { @class = "nav_link" })
+                </li>
             </ul>
         </div>
     </div>
