@@ -17,6 +17,9 @@ namespace TaskManagementSystem.Controllers
         [HttpGet]
         public ActionResult Register()
         {
+            var token = Session["AuthToken"];
+            if (token != null)
+                return RedirectToAction("Dashboard", "Manager");
             return View();
         }
 
@@ -66,18 +69,19 @@ namespace TaskManagementSystem.Controllers
             return View(model);
         }
 
-        private string returnUrl;
-
         [HttpGet]
         public ActionResult Login()
         {
-            returnUrl = Request.Params["returnUrl"];
+            var token = Session["AuthToken"];
+            if (token != null)
+                return RedirectToAction("Dashboard", "Manager");
             return View();
         }
 
         [HttpPost]
         public ActionResult Login(LoginModel model)
         {
+            string returnUrl = Request.Params["returnUrl"];
             if (ModelState.IsValid)
             {
                 var oldManagerUser = _context.ManagerUsers.FirstOrDefault(i => i.Email == model.Email);
@@ -85,16 +89,19 @@ namespace TaskManagementSystem.Controllers
                 {
                     if (Crypto.VerifyHashedPassword(oldManagerUser.Password, model.Password))
                     {
-                        //FormsAuthentication.SetAuthCookie(oldManagerUser.Id.ToString(), model.RememberMe);
                         if (model.RememberMe)
                         {
                             Session.Timeout = 1440;
                             Session["AuthToken"] = oldManagerUser.Id;
                         }
+                        else
+                        {
+                            Session.Timeout = 60;
+                            Session["AuthToken"] = oldManagerUser.Id;
+                        }
 
-                        if (String.IsNullOrEmpty(returnUrl))
-                            return RedirectToAction("Index", "Tasks");
-                        // Take a look here
+                        //if (String.IsNullOrEmpty(returnUrl))
+                        //    return RedirectToAction("Index", "Tasks");
                         return RedirectToAction("Dashboard", "Manager");
                     }
                 }
@@ -108,7 +115,9 @@ namespace TaskManagementSystem.Controllers
                             Session.Timeout = 1440;
                             Session["AuthToken"] = oldWorkerUser.Id;
                         }
-                        return RedirectToAction("Index", "Home");
+                        if (String.IsNullOrEmpty(returnUrl))
+                            return RedirectToAction("Index", "Home");
+                        //return RedirectToAction("Dashboard", "Worker");
                     }
                 }
             }

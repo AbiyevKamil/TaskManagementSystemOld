@@ -1,0 +1,51 @@
+﻿@using TaskManagementSystem.Entity
+@model ManagerUser
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management System - @ViewBag.Title</title>
+    <link href="~/Content/dashboard.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+</head>
+<body>
+    <div class="navbar-container">
+        <div class="nav_main">
+            <p class="nav_main--title">
+                @Html.ActionLink("Task Manager", "Index", "Home", new { }, new { @class = "nav_brand" })
+            </p>
+            <ul class="nav_main--links">
+                <li>
+                    @Html.ActionLink("Workers", "Login", "Account", new { }, new { @class = "nav_link" })
+                </li>
+                <li>
+                    @Html.ActionLink("My Workers", "Login", "Account", new { }, new { @class = "nav_link" })
+                </li>
+                <li>
+                    @Html.ActionLink("Tasks", "Login", "Account", new { }, new { @class = "nav_link" })
+                </li>
+                <li>
+                    @Html.ActionLink("My Tasks", "Login", "Account", new { }, new { @class = "nav_link" })
+                </li>
+                <li>
+                    @Html.ActionLink(@Model.Username, "Login", "Account", new { }, new { @class = "nav_link" })
+                </li>
+                <li>
+                    @using (Html.BeginForm("Logout", "Account"))
+                    {
+                        <input type="submit" class="nav_btn" value="Logout" />
+                    }
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="">
+        @RenderBody()
+    </div>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</body>
+</html>

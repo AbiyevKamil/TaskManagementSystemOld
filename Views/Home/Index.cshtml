@@ -1,7 +1,107 @@
-﻿
+﻿@using TaskManagementSystem.Models
+@model HomeModel
 @{
     ViewBag.Title = "Home";
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+<h3>Tasks</h3>
+<hr />
+@if (@Model.Tasks.Count() == 0)
+{
+    <p>
+        There is no public task.
+    </p>
+}
+else
+{
+    <div>
+        @foreach (var task in Model.Tasks)
+        {
+            <div>
+                <h4>
+                    @task.Title
+                </h4>
+                <hr />
+                <p>
+                    @if (task.Description.Length > 50)
+                    {
+                        @String.Format(task.Description.Substring(0, 47) + "...")
+                    }
+                    else
+                    {
+                        @task.Description
+                    }
+                </p>
+                @if (task.IsCompleted)
+                {
+                    <p>Completed</p>
+                }
+                else
+                {
+                    <p>In progress</p>
+                }
+
+            </div>
+        }
+    </div>
+}
+<h3>Managers</h3>
+<hr />
+@if (@Model.Managers.Count() == 0)
+{
+    <p>
+        There is no manager registered.
+    </p>
+}
+else
+{
+    <div>
+        @foreach (var manager in Model.Managers)
+        {
+            <div>
+                <h4>
+                    @manager.FullName
+                </h4>
+                <hr />
+                <p>
+                    @manager.Username
+                </p>
+                <p>
+                    @manager.Tasks.Count()
+                </p>
+            </div>
+        }
+    </div>
+}
+
+<h3>Workers</h3>
+<hr />
+@if (@Model.Managers.Count() == 0)
+{
+    <p>
+        There is no worker registered.
+    </p>
+}
+else
+{
+    <div>
+        @foreach (var manager in Model.Managers)
+        {
+            <div>
+                <h4>
+                    @manager.FullName
+                </h4>
+                <hr />
+                <p>
+                    @manager.Username
+                </p>
+                <p>
+                    @manager.Tasks.Count()
+                </p>
+            </div>
+        }
+    </div>
 }
 
 
